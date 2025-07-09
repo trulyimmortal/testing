@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: questioncraft-ai-backend
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python -c 'import nltk; nltk.download(\"punkt\")'"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: "/health"
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PORT
+        fromService:
+          type: web
+          name: questioncraft-ai-backend
+          property: port
